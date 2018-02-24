@@ -50,9 +50,15 @@ public class BackgroundService extends IntentService{
         String take = "Please i have a battery here"+battery;
         Log.d(TAG, "onHandleIntent: "+battery);
 
-        IntentFilter intentFilter2 = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        intentFilter2.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(mybroadcastReceiver,intentFilter2);
+//        IntentFilter intentFilter2 = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//        intentFilter2.addCategory(Intent.CATEGORY_DEFAULT);
+//        registerReceiver(mybroadcastReceiver,intentFilter2);
+
+
+//        Intent intt = new Intent(Intent.ACTION_BATTERY_CHANGED);
+//        intt.setAction("BroadCast");
+//        intt.addCategory(Intent.CATEGORY_DEFAULT);
+//        sendBroadcast(intt);
         //dummy delay for 5 sec
         try {
             Thread.sleep(10000);
@@ -71,9 +77,11 @@ public class BackgroundService extends IntentService{
         Intent intentResponse = new Intent();
         intentResponse.setAction(ACTION_MyIntentService);
         intentResponse.setAction("Battery");
+      //  intentResponse.setAction("BroadCast");
         intentResponse.addCategory(Intent.CATEGORY_DEFAULT);
         intentResponse.putExtra(EXTRA_KEY_OUT, extraOut);
         intentResponse.putExtra("Value from service",take);
+        //intentResponse.putExtra(Intent.ACTION_BATTERY_CHANGED,0);
         sendBroadcast(intentResponse);
     }
 }

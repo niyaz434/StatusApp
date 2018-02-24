@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         intentFilter1.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mybroadcastReceiver,intentFilter1);
 
-        IntentFilter intentFilter2 = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            IntentFilter intentFilter2 = new IntentFilter("BroadCast");
         intentFilter2.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mybroadcastReceiver,intentFilter2);
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,1);
 
             String result = intent.getStringExtra(BackgroundService.EXTRA_KEY_OUT);
             //Toast.makeText(MainActivity.this, "this"+result, Toast.LENGTH_SHORT).show();
@@ -111,9 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
             //Log.d("Original battery", "onReceive: "+level);
 //            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-//            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-//            int battPct = level/scale;
-            Log.d("Battery", "onReceive: "+level);
+//            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)//int battPct = level/scale;
+           Log.d("Battery", "onReceive: "+level);
             String battery1 = String.valueOf(level);
             textView2.setText(getString(R.string.battery_level)+battery1);
 

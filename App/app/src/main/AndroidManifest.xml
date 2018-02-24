@@ -19,6 +19,7 @@
         <service android:name=".BackgroundService"
             android:exported="false"/>
 
+
     </application>
 
 </manifest>
