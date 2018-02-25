@@ -19,6 +19,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView textView1;
     TextView textView2;
+    TextView textView3;
+    TextView textView4;
+    TextView textView5;
+    TextView textView6;
+    TextView textView7;
     private MyBroadcastReceiver mybroadcastReceiver;
     //private MyBroadcastReceiver mybroadcastReceiver1;
 
@@ -30,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.servicetext);
         textView1 = (TextView) findViewById(R.id.servicetext1);
         textView2 = (TextView) findViewById(R.id.servicetext2);
+        textView3 = (TextView) findViewById(R.id.servicetext3);
+        textView4 = (TextView) findViewById(R.id.servicetext4);
+        textView5 = (TextView) findViewById(R.id.servicetext5);
+        textView6 = (TextView) findViewById(R.id.servicetext6);
+        textView7 = (TextView) findViewById(R.id.servicetext7);
 
 
 
@@ -60,14 +70,37 @@ public class MainActivity extends AppCompatActivity {
         intentFilter1.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mybroadcastReceiver,intentFilter1);
 
-            IntentFilter intentFilter2 = new IntentFilter("BroadCast");
+            IntentFilter intentFilter2 = new IntentFilter("Os");
         intentFilter2.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mybroadcastReceiver,intentFilter2);
 
+            IntentFilter intentFilter3= new IntentFilter("Network");
+        intentFilter3.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mybroadcastReceiver,intentFilter3);
+
+        IntentFilter intentFilter4= new IntentFilter("Mobile");
+        intentFilter4.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mybroadcastReceiver,intentFilter4);
+
+        IntentFilter intentFilter5 = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        intentFilter5.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mybroadcastReceiver,intentFilter5);
+
+        IntentFilter intentFilter6 = new IntentFilter("External");
+        intentFilter6.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mybroadcastReceiver,intentFilter6);
+
+
+        IntentFilter intentFilter7 = new IntentFilter("Internal");
+        intentFilter7.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(mybroadcastReceiver,intentFilter7);
+
+
+
 
         Intent intent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12345, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager=(AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 12345, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager=(AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC,System.currentTimeMillis(),1000,
                 pendingIntent);
 //
@@ -112,9 +145,24 @@ public class MainActivity extends AppCompatActivity {
             //Log.d("Original battery", "onReceive: "+level);
 //            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 //            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)//int battPct = level/scale;
-           Log.d("Battery", "onReceive: "+level);
-            String battery1 = String.valueOf(level);
-            textView2.setText(getString(R.string.battery_level)+battery1);
+           //Log.d("Battery", "onReceive: "+level);
+           // String battery1 = String.valueOf(level);
+            textView2.setText("Battery level :"+level);
+
+            String nev = intent.getStringExtra("Os");
+            textView3.setText(nev);
+
+            String wifi = intent.getStringExtra("WIFI");
+            textView4.setText(wifi);
+
+            String mob = intent.getStringExtra("MOB");
+            textView5.setText(mob);
+
+            float value = Math.round(intent.getFloatExtra("EXT",0));
+            textView6.setText("External Storage: "+value/100 +" GB");
+
+            float intvalue = Math.round(intent.getFloatExtra("INT",0));
+            textView7.setText("Internal Storage :" + intvalue/100 + " GB");
 
 
         }
