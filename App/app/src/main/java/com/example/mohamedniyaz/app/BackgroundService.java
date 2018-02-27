@@ -3,11 +3,13 @@ package com.example.mohamedniyaz.app;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -66,6 +68,7 @@ public class BackgroundService extends IntentService  {
     HttpURLConnection httpURLConnection;
     String placeName ;
     String tem ;
+    String netwrokstatus = "";
 
 
     public BackgroundService() {
@@ -76,9 +79,9 @@ public class BackgroundService extends IntentService  {
     @SuppressLint("NewApi")
     @Override
     protected void onHandleIntent(Intent intent) {
-        String wifi = null;
+
         long availablespace = 0;
-        String data = null;
+        //String data = null;
         long internal = 0;
         float internal1 = 0;
         float external = 0;
@@ -105,17 +108,28 @@ public class BackgroundService extends IntentService  {
 
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
-        for (NetworkInfo netinfo : networkInfos) {
-            if (netinfo.getTypeName().equalsIgnoreCase("WIFI"))
-                if (netinfo.isConnected()) {
-                    wifi = "Connected to wifi";
-                } else if (netinfo.getTypeName().equalsIgnoreCase("MOBILE")) ;
-                else if (netinfo.isConnected()) {
-                    data = "Connected to data";
-                }
+//        NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+//        for (NetworkInfo netinfo : networkInfos) {
+//            if (netinfo.getTypeName().equalsIgnoreCase("WIFI"))
+//                if (netinfo.isConnected()) {
+//                    wifi = "Connected to wifi";
+//                } else if (netinfo.getTypeName().equalsIgnoreCase("MOBILE")) ;
+//                else if (netinfo.isConnected()) {
+//                    data = "Connected to data";
+//                }
+//
+//        }
 
+       final android.net. NetworkInfo wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        final android.net. NetworkInfo data = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if(wifi.isConnectedOrConnecting()){
+            netwrokstatus = "wifi";
+        }else if(data.isConnectedOrConnecting()){
+            netwrokstatus = "Mobile data";
+        }else{
+            netwrokstatus = "No network found";
         }
+
 
         File Path = Environment.getExternalStorageDirectory();
         StatFs statFs = new StatFs(Path.getPath());
@@ -144,7 +158,7 @@ public class BackgroundService extends IntentService  {
 //        sendBroadcast(intt);
         //dummy delay for 5 sec
         try {
-            Thread.sleep(2000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -185,7 +199,45 @@ public class BackgroundService extends IntentService  {
 //        Log.d(TAG, "onHandleIntent: "+"http://api.openweathermap.org/data/2.5/weather?lat=" + String.valueOf(lat)+"&lon=" + String.valueOf(lon) + "&appid=f2941beeefc7cc4e475b1c20ab645d95");
        // Intent intent1  =new Intent();
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String provoider = locationManager.getBestProvider(new Criteria(), false);
+//        boolean gps_enabled = false;
+//        boolean network_enabled = false;
+//
+//        try {
+//            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        } catch(Exception ex) {}
+//
+//        try {
+//            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        } catch(Exception ex) {}
+//
+//        if(!gps_enabled && !network_enabled) {
+//            // notify user
+//            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//            dialog.setMessage(this.getResources().getString(R.string.gps_network_not_enabled));
+//            dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                    // TODO Auto-generated method stub
+//                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    context.startActivity(myIntent);
+//                    //get gps
+//                }
+//            });
+//            dialog.setNegativeButton(context.getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+//
+//                @Override
+//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                    // TODO Auto-generated method stub
+//
+//                }
+//            });
+//            dialog.show();
+//        }
+
+        String provoider = null;
+        if (locationManager != null) {
+            provoider = locationManager.getBestProvider(new Criteria(), false);
+        }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -196,15 +248,19 @@ public class BackgroundService extends IntentService  {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location location = locationManager.getLastKnownLocation(provoider);
+        Location location = null;
+        if (locationManager != null) {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        }
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
 
 
-        Double lat = location.getLatitude();
-        Double lon = location.getLongitude();
 
         String api = "http://api.openweathermap.org/data/2.5/weather?lat=" + String.valueOf(lat)+"&lon=" + String.valueOf(lon) + "&appid=f2941beeefc7cc4e475b1c20ab645d95";
 
-        // Log.d(TAG, "onHandleIntent: "+api);
+         Log.d(TAG, "onHandleIntent: "+api);
         try {
             url = new URL(api);
 
@@ -274,8 +330,8 @@ public class BackgroundService extends IntentService  {
         //intentResponse.putExtra(EXTRA_KEY_OUT, extraOut);
         //intentResponse.putExtra("Value from service",take);
         intentResponse.putExtra("Os",version);
-        intentResponse.putExtra("WIFI",wifi);
-        intentResponse.putExtra("MOB",data);
+        intentResponse.putExtra("WIFI",netwrokstatus);
+        //intentResponse.putExtra("MOB",data);
         intentResponse.putExtra("EXT",megAvailable);
         intentResponse.putExtra("INT",megAvailable1);
         intentResponse.putExtra("LOC",placeName);

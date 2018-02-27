@@ -8,15 +8,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +36,18 @@ public class MainActivity extends AppCompatActivity {
     TextView textView2;
     TextView textView3;
     TextView textView4;
-    TextView textView5;
+   // TextView textView5;
     TextView textView6;
     TextView textView7;
    TextView textView8;
    TextView textView9;
     private MyBroadcastReceiver mybroadcastReceiver;
+    SharedPreferences sharedPreferences;
     //private MyBroadcastReceiver mybroadcastReceiver1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -48,11 +56,31 @@ public class MainActivity extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.servicetext2);
         textView3 = (TextView) findViewById(R.id.servicetext3);
         textView4 = (TextView) findViewById(R.id.servicetext4);
-        textView5 = (TextView) findViewById(R.id.servicetext5);
+       // textView5 = (TextView) findViewById(R.id.servicetext5);
         textView6 = (TextView) findViewById(R.id.servicetext6);
         textView7 = (TextView) findViewById(R.id.servicetext7);
         textView8 = (TextView) findViewById(R.id.servicetext8);
         textView9= (TextView) findViewById(R.id.servicetext9);
+
+        Toast.makeText(this, "Please turn on the location and network coonection to access location", Toast.LENGTH_LONG).show();
+
+        //Shared Preferences
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        //Editor for shared Preference
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("battery_key",true);
+        editor.putBoolean("model_key",true);
+        editor.putBoolean("wifi_key",true);
+        //editor.putBoolean("mobile_key",true);
+        editor.putBoolean("external_key",true);
+        editor.putBoolean("internal_key",true);
+        editor.putBoolean("location_key",true);
+        editor.putBoolean("temp_key",true);
+        editor.apply();
 
         //weather
 
@@ -138,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         final PendingIntent pendingIntent = PendingIntent.getService(context, 12345, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (alarmManager != null) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),6000,
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),100,
                     pendingIntent);
         }
 
@@ -150,15 +178,26 @@ public class MainActivity extends AppCompatActivity {
 //        alarmManager1.setInexactRepeating(AlarmManager.RTC,System.currentTimeMillis(),000,
 //                pendingIntent1);
 
-
-
-
-
-
-
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+         MenuInflater inflater = getMenuInflater();
+         inflater.inflate(R.menu.select,menu);
+         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.select){
+            Intent intent = new Intent(this,Settings.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onDestroy() {
@@ -167,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         //unregisterReceiver(mybroadcastReceiver1);
 
     }
+
 
 
 
@@ -182,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
 
+            Toast.makeText(context, "List Updated after one minute", Toast.LENGTH_SHORT).show();
 
 
             IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -206,38 +247,74 @@ public class MainActivity extends AppCompatActivity {
 //            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)//int battPct = level/scale;
            //Log.d("Battery", "onReceive: "+level);
            // String battery1 = String.valueOf(level);
-            textView2.setText("Battery level :"+level);
-            textView2.setTextSize(18);
+            if(sharedPreferences.getBoolean("battery_key",true)) {
 
+                textView2.setText("Battery level :" + level);
+                textView2.setTextSize(18);
+            }else {
+                textView2.setText("To Track Battery status ,Please change the option and wait for few seconds..");
+            }
             String nev = intent.getStringExtra("Os");
-            textView3.setText(nev);
-            textView3.setTextSize(18);
+            if(sharedPreferences.getBoolean("model_key",true) ){
+                textView3.setText(nev);
+                textView3.setTextSize(18);
+            }else {
+                textView3.setText("To Track Model status ,Please change the option and wait for few seconds..");
+            }
+
 
             String wifi = intent.getStringExtra("WIFI");
-            textView4.setText(wifi);
-            textView4.setTextSize(18);
+            if(sharedPreferences.getBoolean("wifi_key",true)) {
+                textView4.setText("Network Mode: "+wifi);
+                textView4.setTextSize(18);
+            }else {
+                textView4.setText("To Track wifi status ,Please change the option and wait for few seconds..");
+            }
 
-            String mob = intent.getStringExtra("MOB");
-            textView5.setText(mob);
-            textView5.setTextSize(18);
+//            String mob = intent.getStringExtra("MOB");
+//            if(sharedPreferences.getBoolean("mobile_key",true)) {
+//                textView5.setText(mob);
+//                textView5.setTextSize(18);
+//            }else {
+//                textView5.setText("To Track data status ,Please change the option and wait for few seconds..");
+//            }
+
 
             long value = Math.round(intent.getLongExtra("EXT",0));
-            textView6.setText("External Storage: "+value+" MB");
-            textView6.setTextSize(18);
+            if(sharedPreferences.getBoolean("external_key",true)) {
+                textView6.setText("External Storage: " + value + " MB");
+                textView6.setTextSize(18);
+            }else {
+                textView6.setText("To Track External Storage status ,Please change the option and wait for few seconds..");
+            }
 
             long intvalue = Math.round(intent.getLongExtra("INT",0));
-            textView7.setText("Internal Storage :" + intvalue + " MB");
-            textView7.setTextSize(18);
+            if(sharedPreferences.getBoolean("internal_key",true)) {
+                textView7.setText("Internal Storage :" + intvalue + " MB");
+                textView7.setTextSize(18);
+            } else {
+                textView7.setText("To Track Internal Storage status ,Please change the option and wait for few seconds..");
+            }
 
             String place = intent.getStringExtra("LOC");
-            Log.d("place", "PLace: "+place);
-            textView8.setText("Location  : " +place);
-            textView8.setTextSize(18);
+            if(sharedPreferences.getBoolean("location_key",true)) {
+                Log.d("place", "PLace: " + place);
+                textView8.setText("Location  : " + place);
+                textView8.setTextSize(18);
+            }else {
+                textView8.setText("To Track Battery status ,Please change the option and wait for few seconds..");
+            }
+
 
             String today = intent.getStringExtra("WEA");
-            Log.d("weather", "Weather: "+today);
-            textView9.setText("Today's Temperature :  "+ today + " °C");
-            textView9.setTextSize(18);
+            if(sharedPreferences.getBoolean("temp_key",true)) {
+                Log.d("weather", "Weather: " + today);
+                textView9.setText("Today's Temperature :  " + today + " °C");
+                textView9.setTextSize(18);
+            }else {
+                textView9.setText("To Track Battery status ,Please change the option and wait for few seconds..");
+            }
+
 
 
         }

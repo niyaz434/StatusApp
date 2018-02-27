@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:id="@+id/battery"
+        android:key="battery_key"
+        android:title="Battery"
+        android:summaryOn="Battey is tracking"
+        android:summaryOff="Battery scan is off"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:id="@+id/model"
+        android:key="model_key"
+        android:title="Model and Os version"
+        android:summaryOff="Model and Os is off"
+        android:summaryOn="Model and Os is tracking"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:id="@+id/wifi"
+        android:key="wifi_key"
+        android:title="Network Mode"
+        android:summaryOn="Wifi or data is tracking"
+        android:summaryOff="Wifi or data scan is off"
+        android:defaultValue="true"/>
+
+    <CheckBoxPreference
+        android:id="@+id/external"
+        android:key="external_key"
+        android:title="External Memory"
+        android:summaryOn="External Memory is tracking"
+        android:summaryOff="External memory scan is off"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:id="@+id/internal"
+        android:key="internal_key"
+        android:title="Internal Memory"
+        android:summaryOn="Internal Memory is tracking"
+        android:summaryOff="Internal Memory scan is off"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:id="@+id/location"
+        android:key = "location_key"
+        android:title="Location"
+        android:summaryOn="Location is tracking"
+        android:summaryOff="Location scan is off"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:id="@+id/temperature"
+        android:key = "temp_key"
+        android:title="Temperature"
+        android:summaryOn="Weather is tracking"
+        android:summaryOff="Weather scan is off"
+        android:defaultValue="true"/>
+
+</PreferenceScreen>
