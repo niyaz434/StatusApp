@@ -6,24 +6,24 @@
     android:layout_height="match_parent"
     tools:context="com.example.mohamedniyaz.app.MainActivity">
 
-    <TextView
-        android:id="@+id/servicetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-         />
+    <!--<TextView-->
+        <!--android:id="@+id/servicetext"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hello World!"-->
+         <!--/>-->
 
-    <TextView
-        android:id="@+id/servicetext1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/servicetext"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="22dp"
-        android:text="Battery!" />
+    <!--<TextView-->
+        <!--android:id="@+id/servicetext1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/servicetext"-->
+        <!--android:layout_marginLeft="12dp"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginTop="22dp"-->
+        <!--android:text="Battery!" />-->
 
     <TextView
         android:id="@+id/servicetext2"
@@ -31,11 +31,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/servicetext1"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
-        android:text="Battery Level: " />
+        android:text="Battery Level: "
+        android:textSize="18sp"/>
     <TextView
         android:id="@+id/servicetext3"
         android:layout_width="wrap_content"
@@ -46,7 +46,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
-        android:text="Mobile Model: "
+        android:text="Mobile Model:"
+        android:textSize="18sp"
         />
     <TextView
         android:id="@+id/servicetext4"
@@ -59,6 +60,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
         android:text="Wifi or Mobile data !"
+        android:textSize="18sp"
         />
 <TextView
         android:id="@+id/servicetext5"
@@ -71,6 +73,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
         android:text="Wifi or Mobile data !"
+    android:textSize="18sp"
         />
     <TextView
         android:id="@+id/servicetext6"
@@ -83,6 +86,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
         android:text="External Storage !"
+        android:textSize="18sp"
         />
 
     <TextView
@@ -96,6 +100,34 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="22dp"
         android:text="Internal Storage !"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/servicetext8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/servicetext7"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="22dp"
+        android:text="Location!"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:id="@+id/servicetext9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/servicetext8"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="22dp"
+        android:text="Weather!"
+        android:textSize="18sp"
         />
 
 </RelativeLayout>
